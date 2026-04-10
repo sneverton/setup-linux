@@ -17,7 +17,11 @@ install_oh_my_zsh() {
 
 install_zsh_plugin() {
   local repo="$1"
-  local destination="$2"
+  local plugin_name
+  local destination
+
+  plugin_name="$(basename "$repo")"
+  destination="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/$plugin_name"
 
   if [[ -d "$destination" ]]; then
     log_info "Plugin already present at $destination"
@@ -55,8 +59,8 @@ set_default_shell() {
 
 main() {
   install_oh_my_zsh
-  install_zsh_plugin "zsh-users/zsh-autosuggestions" "$HOME/.zsh/zsh-autosuggestions"
-  install_zsh_plugin "zsh-users/zsh-syntax-highlighting" "$HOME/.zsh/zsh-syntax-highlighting"
+  install_zsh_plugin "zsh-users/zsh-autosuggestions"
+  install_zsh_plugin "zsh-users/zsh-syntax-highlighting"
   set_default_shell
 }
 
