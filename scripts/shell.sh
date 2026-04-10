@@ -31,6 +31,7 @@ install_zsh_plugin() {
 set_default_shell() {
   local zsh_path
   local current_shell
+  local passwd_entry
 
   if is_dry_run && ! command_exists zsh; then
     zsh_path="/usr/bin/zsh"
@@ -38,14 +39,18 @@ set_default_shell() {
     zsh_path="$(command -v zsh)"
   fi
 
-  current_shell="${SHELL:-}"
+  if command_exists getent && passwd_entry="$(getent passwd "$USER" 2>/dev/null)"; then
+    current_shell="$(cut -d: -f7 <<<"$passwd_entry")"
+  else
+    current_shell="${SHELL:-}"
+  fi
 
   if [[ "$current_shell" == "$zsh_path" ]]; then
     log_info "Default shell already set to zsh."
     return
   fi
 
-  run_command "Setting default shell to zsh" chsh -s "$zsh_path" "$USER"
+  run_command "Setting default shell to zsh" sudo usermod --shell "$zsh_path" "$USER"
 }
 
 main() {
@@ -55,4 +60,6 @@ main() {
   set_default_shell
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  main "$@"
+fi
