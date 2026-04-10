@@ -1,0 +1,12 @@
+[user]
+  name = Everton Andrade
+  email = everton@andrade.mat.br
+
+[core]
+  editor = nvim
+
+[alias]
+  co = checkout
+  br = branch
+  ci = commit
+  st = status
