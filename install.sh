@@ -114,7 +114,42 @@ should_prompt_for_modules() {
     return 0
   fi
 
+  if tty_is_available; then
+    return 0
+  fi
+
   return 1
+}
+
+tty_is_available() {
+  if ! (: <>/dev/tty) 2>/dev/null; then
+    return 1
+  fi
+
+  return 0
+}
+
+read_module_selection() {
+  local selection=""
+
+  if [[ -t 0 ]]; then
+    if ! read -r -p "Selection [all]: " selection; then
+      selection="all"
+    fi
+    printf '%s\n' "$selection"
+    return 0
+  fi
+
+  if tty_is_available; then
+    printf 'Selection [all]: ' >/dev/tty
+    if ! IFS= read -r selection </dev/tty; then
+      selection="all"
+    fi
+    printf '%s\n' "$selection"
+    return 0
+  fi
+
+  printf 'all\n'
 }
 
 determine_modules_to_run() {
@@ -128,10 +163,7 @@ determine_modules_to_run() {
 
   if should_prompt_for_modules; then
     print_module_menu
-    if ! read -r -p "Selection [all]: " selection; then
-      selection="all"
-    fi
-
+    selection="$(read_module_selection)"
     parse_module_selection "${selection:-all}"
     return 0
   fi
