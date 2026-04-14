@@ -29,9 +29,9 @@ print_module_menu() {
   local index
   local module
 
-  printf 'Escolha os modulos para instalar.\n' >&2
-  printf 'Use numeros ou nomes separados por virgula ou espaco, ou digite all.\n' >&2
-  printf 'Opcoes:\n' >&2
+  printf 'Escolha os módulos para instalar.\n' >&2
+  printf 'Use números ou nomes separados por vírgula ou espaço, ou digite all.\n' >&2
+  printf 'Opções:\n' >&2
 
   for index in "${!DEFAULT_MODULES[@]}"; do
     module="${DEFAULT_MODULES[$index]}"
